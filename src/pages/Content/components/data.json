@@ -1,0 +1,18 @@
+[
+  {
+    "id": "1",
+    "name": "Generate response"
+  },
+  {
+    "id": "2",
+    "name": "Generate response with prompt"
+  },
+  {
+    "id": "3",
+    "name": "Say NO"
+  },
+  {
+    "id": "4",
+    "name": "Say YES"
+  }
+]

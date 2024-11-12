@@ -1,30 +1,29 @@
 {
   "manifest_version": 3,
-  "name": "Chrome Extension with React & Webpack",
-  "description": "A chrome extension boilerplate built with React 17, Webpack 5, and Webpack Dev Server 4",
+  "name": "AI gmail responder",
+  "description": "AI Gmail Responder by utilizing OpenAI API",
+  "version": "1.0.1",
+  "author": "ZetaSoft",
   "options_page": "options.html",
   "background": { "service_worker": "background.bundle.js" },
   "action": {
     "default_popup": "popup.html",
-    "default_icon": "icon-34.png"
+    "default_icon": "icon-16.png"
   },
-  "chrome_url_overrides": {
-    "newtab": "newtab.html"
-  },
+  "permissions": ["scripting", "storage", "activeTab", "declarativeContent", "tabs"],
   "icons": {
-    "128": "icon-128.png"
+    "16": "icon-16.png"
   },
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*", "<all_urls>"],
       "js": ["contentScript.bundle.js"],
-      "css": ["content.styles.css"]
+      "css": ["content.styles.css", "tailwind.css"]
     }
   ],
-  "devtools_page": "devtools.html",
   "web_accessible_resources": [
     {
-      "resources": ["content.styles.css", "icon-128.png", "icon-34.png"],
+      "resources": ["content.styles.css"],
       "matches": []
     }
   ]
