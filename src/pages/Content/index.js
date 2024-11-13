@@ -9,6 +9,10 @@ setInterval(() => {
         waitForElm('.aYL').then((elm) => {
             waitToAddButton(elm)
         })
+    } else if (document.querySelectorAll('#ai-responder-tool').length > 1) {
+        for (let i = 0; i < document.querySelectorAll('#ai-responder-tool').length - 1; i++) {
+            document.getElementById('ai-responder-tool').remove();
+        }
     }
 }, 1000)
 
