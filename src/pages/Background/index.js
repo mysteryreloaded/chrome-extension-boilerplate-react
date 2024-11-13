@@ -11,13 +11,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       height: 136,
     }).then( r => {});
   } else if (request.action === 'transcribe') {
-    // console.log(chrome.extension.getBackgroundPage())
-    // chrome.runtime.sendMessage({
-    //   action: 'transcribe_content',
-    //   message: request.message,
-    // }).then(r => {
-    //   console.log('transcribe_content sent', r)
-    // })
     chrome.tabs.query({active: true, currentWindow: false}, function (tabs) {
       chrome.tabs.sendMessage(tabs[0].id, {action: request.action, message: request.message});
     })
@@ -26,7 +19,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       chrome.tabs.sendMessage(tabs[0].id, {action: request.action});
     })
   } else if (request.action === 'create') {
-    console.log('last resort')
     chrome.windows.getCurrent(w => {
       chrome.tabs.query({active: true, windowId: w.id}, function (tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {action: request.action});

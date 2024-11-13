@@ -112,7 +112,7 @@ function generateResponse(id, message = '') {
     console.log(message);
     if (message !== '') {
         systemContent = `Help me reply to an email. My name is: ${myName} and senders name is: ${senderName}. Don't include subject. Use same language provided by the user. Form your reply based on the following instructions: ${message}`
-    } else if (id === 2) {
+    } else if (id === "2") {
         return;
     }
 

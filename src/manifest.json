@@ -10,7 +10,7 @@
     "default_popup": "popup.html",
     "default_icon": "icon-16.png"
   },
-  "permissions": ["scripting", "storage", "tabs", "tabCapture", "offscreen", "webNavigation"],
+  "permissions": ["scripting", "storage", "tabs", "tabCapture", "offscreen"],
   "icons": {
     "16": "icon-16.png"
   },
@@ -21,7 +21,8 @@
     {
       "matches": ["http://*/*", "https://*/*", "<all_urls>"],
       "js": ["contentScript.bundle.js"],
-      "css": ["content.styles.css", "tailwind.css"]
+      "css": ["content.styles.css", "tailwind.css"],
+      "all_frames": true
     }
   ],
   "web_accessible_resources": [
