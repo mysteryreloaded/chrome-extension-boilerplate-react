@@ -28,6 +28,9 @@ function Popup(props) {
       console.log(res)
       setIsKeyValid(true)
       chrome.storage.local.set({abc: key, access: true}).then(r => console.log("SET abc and access in storage: ", r)).catch((err) => {console.log(err)})
+      chrome.runtime.sendMessage({
+        action: 'create'
+      })
     }).catch((err) => {
       if (err.code === 'invalid_api_key')
         notify("API key is not correct.")
@@ -40,6 +43,9 @@ function Popup(props) {
     setKey("")
     setIsKeyValid(false)
     chrome.storage.local.set({abc: "", access: false}).then(r => console.log("RESET abc and access in storage: ", r)).catch((err) => {console.log(err)})
+    chrome.runtime.sendMessage({
+      action: 'destroy'
+    })
   }
 
   return (
@@ -54,7 +60,8 @@ function Popup(props) {
         <ToastContainer/>
       </div> }
       { isKeyValid && <div className="form-group text-center mt-3">
-        <label className={'fw-bold mb-3'}>API Key connected successfully!</label>
+        <label className={'fw-bold mb-2'}>API Key connected successfully!</label>
+        <p className={'mb-3'}>If AI button is not visible please refresh your gmail page.</p>
         <button id={'change-key'} className={'btn btn-dark w-100'} onClick={() => resetKey()}>Change API key</button>
       </div> }
     </div>

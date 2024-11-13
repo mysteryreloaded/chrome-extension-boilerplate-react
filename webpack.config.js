@@ -42,11 +42,12 @@ var options = {
     popup: path.join(__dirname, 'src', 'pages', 'Popup', 'index.jsx'),
     background: path.join(__dirname, 'src', 'pages', 'Background', 'index.js'),
     contentScript: path.join(__dirname, 'src', 'pages', 'Content', 'index.js'),
+    iframe: path.join(__dirname, 'src', 'pages', 'Iframe', 'index.jsx'),
     devtools: path.join(__dirname, 'src', 'pages', 'Devtools', 'index.js'),
     panel: path.join(__dirname, 'src', 'pages', 'Panel', 'index.jsx'),
   },
   chromeExtensionBoilerplate: {
-    notHotReload: ['background', 'contentScript', 'devtools'],
+    notHotReload: ['background', 'contentScript', 'iframe', 'devtools'],
   },
   output: {
     filename: '[name].bundle.js',
@@ -115,6 +116,7 @@ var options = {
           {
             loader: require.resolve('babel-loader'),
             options: {
+              compact: false,
               plugins: [
                 isDevelopment && require.resolve('react-refresh/babel'),
               ].filter(Boolean),
@@ -168,6 +170,15 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
+          from: 'src/pages/Iframe/Iframe.css',
+          to: path.join(__dirname, 'build'),
+          force: true,
+        },
+      ],
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
           from: 'src/assets/img/icon-128.png',
           to: path.join(__dirname, 'build'),
           force: true,
@@ -187,6 +198,24 @@ var options = {
       patterns: [
         {
           from: 'src/assets/img/icon-16.png',
+          to: path.join(__dirname, 'build'),
+          force: true,
+        },
+      ],
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/assets/img/recording.png',
+          to: path.join(__dirname, 'build'),
+          force: true,
+        },
+      ],
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/assets/img/not-recording.png',
           to: path.join(__dirname, 'build'),
           force: true,
         },
@@ -214,6 +243,12 @@ var options = {
       template: path.join(__dirname, 'src', 'pages', 'Panel', 'index.html'),
       filename: 'panel.html',
       chunks: ['panel'],
+      cache: false,
+    }),
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, 'src', 'pages', 'Iframe', 'index.html'),
+      filename: 'iframe.html',
+      chunks: ['iframe'],
       cache: false,
     }),
   ].filter(Boolean),

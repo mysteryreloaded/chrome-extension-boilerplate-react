@@ -10,10 +10,13 @@
     "default_popup": "popup.html",
     "default_icon": "icon-16.png"
   },
-  "permissions": ["scripting", "storage", "activeTab", "declarativeContent", "tabs"],
+  "permissions": ["scripting", "storage", "tabs", "tabCapture", "offscreen", "webNavigation"],
   "icons": {
     "16": "icon-16.png"
   },
+  "host_permissions": [
+    "*://mail.google.com/*"
+  ],
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*", "<all_urls>"],

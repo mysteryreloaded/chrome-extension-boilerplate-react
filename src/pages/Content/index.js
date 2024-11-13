@@ -1,44 +1,55 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Dropdown from './components/Dropdown'
-import data from './components/data.json'
+import options from './components/data.json'
 import OpenAI from 'openai'
 
-waitForElm('.aYL').then((elm) => {
-    waitToAddButton(elm)
+setInterval(() => {
+    if (document.querySelector('.Am.aiL') !== null && document.getElementById('ai-responder-tool') === null) {
+        waitForElm('.aYL').then((elm) => {
+            waitToAddButton(elm)
+        })
+    }
+}, 1000)
+
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === 'destroy' && document.getElementById('ai-responder-tool') !== null) {
+        document.getElementById('ai-responder-tool').remove()
+    } else if (
+      request.action === 'create' &&
+      document.getElementById('ai-responder-tool') === null &&
+      document.querySelector('.aoP.HM') !== null
+    ) {
+        waitForElm('.aYL').then((elm) => {
+            waitToAddButton(elm)
+        })
+    }
 })
 
 function waitToAddButton(elm) {
-    let refreshIntervalId = setInterval(() => {
-        let elmExists = document.getElementById('ai-responder-tool') !== null
-        let replyBoxExists = document.querySelector('.aoP.HM') !== null
-        if (elm !== null && elmExists) {
-            return
-        }
-        if (!replyBoxExists) {
-            console.log('EXIT INTERVAL')
-            return
-        }
-        let myDiv = document.createElement('div')
-        myDiv.id = 'ai-responder-tool'
-        if (elm !== null) {
-            if (!elmExists) {
-                waitForElm('.aYL').then((elem) => {
-                    waitToAddButton(elem)
-                })
+    let elmExists = document.getElementById('ai-responder-tool') !== null
+    if (elm !== null && elmExists) {
+        return
+    }
+
+    if (elm !== null && !elmExists) {
+        chrome.storage.local.get("access").then(r => {
+            let myDiv = document.createElement('div')
+            myDiv.id = 'ai-responder-tool'
+            if (r.access) {
                 elm.append(myDiv)
                 ReactDOM.render(<Dropdown
                   id='responder'
                   title='Respond with AI'
-                  data={data}
+                  data={options}
                   hasImage
                   onSelect={handleSelect}
                 />, myDiv)
                 document.querySelectorAll('.adf.ads').forEach((item) => {item.click()})
-                clearInterval(refreshIntervalId)
             }
-        }
-    }, 500)
+        })
+    }
 }
 
 const handleSelect = (id) => {
@@ -52,7 +63,7 @@ function formatMessage(message) {
     return result.substring(result.indexOf('to me'), result.length).substring(6)
 }
 
-function generateResponse(id) {
+function generateResponse(id, message = '') {
     let totalTextPrompt = ''
     document.querySelectorAll('.adn.ads').forEach((message) => {totalTextPrompt = totalTextPrompt.concat(formatMessage(message).concat('\n\n'))})
     let senderData = document.querySelectorAll('.adn.ads')[document.querySelectorAll('.adn.ads').length - 1]?.innerText
@@ -61,12 +72,24 @@ function generateResponse(id) {
     myData = myData.substring(myData.indexOf(':'), myData.length).replace('\n', '')
     let myName = myData.substring(2, myData.indexOf(' ('))
     let promptCondition = 'a'
-    let systemContent = `Give ${promptCondition} reply on this email, but do it in a kind way. Don't include subject. Use same language provided by the user. My name is: ${myName} and senders name is: ${senderName}`
     console.log(senderName)
     console.log(myName)
     console.log(totalTextPrompt)
     switch(id) {
         case "2":
+            if (message === '') {
+                chrome.runtime.sendMessage({
+                    action: 'iframe',
+                    left: window.screenLeft + window.outerWidth,
+                    top: window.screenTop
+                }).then(r => {
+                    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+                        if (request.action === 'transcribe' && request.message !== '') {
+                            generateResponse(id, request.message)
+                        }
+                    })
+                })
+            }
             console.log('Generate response with prompt selected.')
             break
         case "3":
@@ -81,6 +104,14 @@ function generateResponse(id) {
             console.log('Generate response selected.')
             break
     }
+    let systemContent = `Give ${promptCondition} reply on this email, but do it in a kind way. Don't include subject. Use same language provided by the user. My name is: ${myName} and senders name is: ${senderName}`
+    console.log(message);
+    if (message !== '') {
+        systemContent = `Help me reply to an email. My name is: ${myName} and senders name is: ${senderName}. Don't include subject. Use same language provided by the user. Form your reply based on the following instructions: ${message}`
+    } else if (id === 2) {
+        return;
+    }
+
     console.log(systemContent)
     chrome.storage.local.get(['abc', 'access'], async (data) => {
         if (totalTextPrompt && data.access) {
@@ -124,25 +155,3 @@ function waitForElm(selector) {
         })
     })
 }
-// import { printLine } from './modules/print'
-//
-// let isContentLoaded = false
-// setInterval(() => {
-//     if (!isContentLoaded) {
-//         startContentScript()
-//     }
-// }, 1000)
-// function startContentScript() {
-//   let lastButton = document.querySelector('.aYL')
-//   let buttonExists = lastButton !== null && lastButton !== undefined
-//   if (window.location.href.includes('://mail.google.com/') && buttonExists) {
-//     lastButton.after("<p>Test</p>")
-//     console.log('Content script works!')
-//     console.log('Must reload extension for modifications to take effect.')
-//
-//     printLine("Using the 'printLine' function from the Print Module")
-//     if (document.getElementById('custom_ai_id') !== null) {
-//         isContentLoaded = true
-//     }
-//   }
-// }
