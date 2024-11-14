@@ -3,14 +3,14 @@
   "name": "AI gmail responder",
   "description": "AI Gmail Responder by utilizing OpenAI API",
   "version": "1.0.1",
-  "author": "ZetaSoft",
+  "author": "Nenad Trifunović",
   "options_page": "options.html",
   "background": { "service_worker": "background.bundle.js" },
   "action": {
     "default_popup": "popup.html",
     "default_icon": "icon-16.png"
   },
-  "permissions": ["scripting", "storage", "tabs", "tabCapture", "offscreen"],
+  "permissions": ["scripting", "storage", "tabs"],
   "icons": {
     "16": "icon-16.png"
   },
@@ -19,16 +19,15 @@
   ],
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*", "<all_urls>"],
+      "matches": ["*://mail.google.com/*"],
       "js": ["contentScript.bundle.js"],
-      "css": ["content.styles.css", "tailwind.css"],
-      "all_frames": true
+      "css": ["content.styles.css", "tailwind.css"]
     }
   ],
   "web_accessible_resources": [
     {
       "resources": ["content.styles.css"],
-      "matches": []
+      "matches": ["*://mail.google.com/*"]
     }
   ]
 }

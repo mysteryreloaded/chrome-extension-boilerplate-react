@@ -11,7 +11,7 @@ setInterval(() => {
         })
     } else if (document.querySelectorAll('#ai-responder-tool').length > 1) {
         for (let i = 0; i < document.querySelectorAll('#ai-responder-tool').length - 1; i++) {
-            document.getElementById('ai-responder-tool').remove();
+            document.getElementById('ai-responder-tool').remove()
         }
     }
 }, 1000)
@@ -51,6 +51,8 @@ function waitToAddButton(elm) {
                   onSelect={handleSelect}
                 />, myDiv)
                 document.querySelectorAll('.adf.ads').forEach((item) => {item.click()})
+                document.getElementById('ai-responder-tool').childNodes[0].style.height = 'unset'
+                document.getElementById('ai-responder-tool').childNodes[0].style.marginTop = 'unset'
             }
         })
     }
@@ -76,8 +78,7 @@ function generateResponse(id, message = '') {
     myData = myData.substring(myData.indexOf(':'), myData.length).replace('\n', '')
     let myName = myData.substring(2, myData.indexOf(' ('))
     let promptCondition = 'a'
-    console.log(senderName)
-    console.log(myName)
+
     console.log(totalTextPrompt)
     switch(id) {
         case "2":
@@ -94,26 +95,21 @@ function generateResponse(id, message = '') {
                     })
                 })
             }
-            console.log('Generate response with prompt selected.')
             break
         case "3":
             promptCondition = 'negative'
-            console.log('Say NO selected.')
             break
         case "4":
             promptCondition = 'positive'
-            console.log('Say YES selected.')
             break
         default:
-            console.log('Generate response selected.')
             break
     }
     let systemContent = `Give ${promptCondition} reply on this email, but do it in a kind way. Don't include subject. Use same language provided by the user. My name is: ${myName} and senders name is: ${senderName}`
-    console.log(message);
     if (message !== '') {
         systemContent = `Help me reply to an email. My name is: ${myName} and senders name is: ${senderName}. Don't include subject. Use same language provided by the user. Form your reply based on the following instructions: ${message}`
     } else if (id === "2") {
-        return;
+        return
     }
 
     console.log(systemContent)
@@ -133,7 +129,6 @@ function generateResponse(id, message = '') {
                     },
                 ],
             })
-            console.log(completion)
             document.querySelector('.Am.aiL[aria-label="Message Body"]').innerText = completion.choices[0].message.content
         }
     })

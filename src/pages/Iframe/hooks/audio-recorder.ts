@@ -33,7 +33,6 @@ const useAudioRecorder = () => {
   
   const getFromCacheOrDownload = async (url: string) => {
     const response = await fetch(url);
-    console.log('getFromCacheOrDownload', response)
     if (response.status === 429) {
       console.log('too many requests');
     }
@@ -52,10 +51,7 @@ const useAudioRecorder = () => {
       // res is base64 now
       if (typeof res === 'string') {
         const file = new File([blob], 'audio.wav', {type: 'audio/wav'});
-        console.log('FILE:', file);
-        console.log('blob:', blob);
         chrome.storage.local.get(['abc', 'access'], async (data) => {
-          console.log('chrome.storage.get data:', data);
           if (data.access) {
             const openai = new OpenAI({
               apiKey: data.abc,
@@ -65,7 +61,6 @@ const useAudioRecorder = () => {
               file: file,
               model: "whisper-1",
             }).then((result) => {
-              console.log('RESULT:', result)
               chrome.runtime.sendMessage({
                 action: 'transcribe',
                 message: result.text
@@ -90,17 +85,8 @@ const useAudioRecorder = () => {
       setRecordingStatus('stopped');
       setRecordingTime(0);
       callBack?.(recorderRef.current?.getBlob(), blobURL);
-      // ToDo: Transform audio to text and send the text to OpenAI below:
-      console.log('before getFromCacheOrDownload', blobURL, recorderRef.current?.getBlob());
+      // Transform audio to text and send it as prompt to OpenAI API:
       getFromCacheOrDownload(blobURL).then(r => {});
-      // chrome.storage.local.set({audioFile: })
-      // const openai = new OpenAI();
-      //
-      // const transcription = openai.audio.transcriptions.create({
-      //   file: fs.createReadStream("/path/to/file/audio.mp3"),
-      //   model: "whisper-1",
-      //   prompt:
-      // });
     });
   };
 

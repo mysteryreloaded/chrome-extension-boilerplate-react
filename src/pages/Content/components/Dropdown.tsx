@@ -14,7 +14,6 @@ interface DropdownProps {
   title?: string;
   data: DropdownItem[];
   position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
-  hasImage?: boolean;
   style?: string;
   selectedId?: string;
   onSelect?: (id: string) => void;
@@ -24,8 +23,7 @@ const Dropdown = ({
                     id,
                     title = 'Select',
                     data,
-                    position = 'bottom-left',
-                    hasImage = false,
+                    position = 'top-right',
                     style,
                     selectedId,
                     onSelect,
@@ -67,7 +65,7 @@ const Dropdown = ({
   );
 
   return (
-    <div ref={dropdownRef} style={{ height: '200px', marginTop: "160px"}}>
+    <div ref={dropdownRef}>
       <button
         id={id}
         aria-label='Toggle dropdown'
@@ -91,7 +89,7 @@ const Dropdown = ({
       </button>
       {/* Open */}
       {isOpen && (
-        <div aria-label='Dropdown menu' className={dropdownClass} style={{left: "27.5%"}}>
+        <div aria-label='Dropdown menu' className={dropdownClass} style={{left: "35%"}}>
           <ul
             role='menu'
             aria-labelledby={id}

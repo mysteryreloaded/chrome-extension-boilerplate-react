@@ -5,11 +5,9 @@ import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 
 function Popup(props) {
-  console.log('PROPS:', props)
   const [key, setKey] = React.useState("")
   const [isKeyValid, setIsKeyValid] = React.useState(false)
   chrome.storage.local.get("access").then(r => {
-    console.log('SHOULD BE RAN ON EVERY COMPONENT RENDER EVENT', r.access)
     setIsKeyValid(r.access)
   })
   function notify(message) {
@@ -25,12 +23,11 @@ function Popup(props) {
       messages: [{ role: 'user', content: 'Say this is a test' }],
       model: 'gpt-4o-mini'
     }).then((res) => {
-      console.log(res)
       setIsKeyValid(true)
-      chrome.storage.local.set({abc: key, access: true}).then(r => console.log("SET abc and access in storage: ", r)).catch((err) => {console.log(err)})
+      chrome.storage.local.set({abc: key, access: true}).then(r => {}).catch((err) => {console.log(err)})
       chrome.runtime.sendMessage({
         action: 'create'
-      })
+      }).then(r => {}).catch((err) => {console.log(err)})
     }).catch((err) => {
       if (err.code === 'invalid_api_key')
         notify("API key is not correct.")
@@ -42,10 +39,10 @@ function Popup(props) {
   function resetKey() {
     setKey("")
     setIsKeyValid(false)
-    chrome.storage.local.set({abc: "", access: false}).then(r => console.log("RESET abc and access in storage: ", r)).catch((err) => {console.log(err)})
+    chrome.storage.local.set({abc: "", access: false}).then(r => {}).catch((err) => {console.log(err)})
     chrome.runtime.sendMessage({
       action: 'destroy'
-    })
+    }).then(r => {}).catch(err => {console.log(err)})
   }
 
   return (
